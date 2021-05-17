@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useEffect, useState } from 'react'
+import Card from './Components/Card'
+import './styles/App.css'
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [characters, setCharacters] = useState()
+  useEffect(() => {
+    console.log('Navegador ONLINE ?')
+    console.log(!window.navigator.onLine)
+    const url = `https://rickandmortyapi.com/api/character/?page=1`
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        let info = data.results
+        setCharacters(info)
+        localStorage.setItem('characters', info)
+      })
+  }, [])
+
+  if (characters) {
+    let elements = characters.map((character) => <Card id={character.id} />)
+
+    return (
+      <div>
+        <h1 className="name">Santiago Vargas Vega</h1>
+        <div div className="App">
+          {elements}
+        </div>
+      </div>
+    )
+  } else {
+    return 'Loading'
+  }
 }
 
-export default App;
+export default App
